@@ -49,4 +49,4 @@ systemctl start storm-logviewer.service
 # systemctl start hive.service
 
 
-/vagrant/bin/dumplogs.sh
+#/vagrant/bin/dumplogs.sh
