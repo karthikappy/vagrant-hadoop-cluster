@@ -2,8 +2,8 @@
 
 echo "CASSANDRA: Starting"
 echo "CASSANDRA: Copying Files"
-tar -xzf /vagrant/resources/software/apache-cassandra-4.0.11-bin.tar.gz -C /usr/local
-ln -s /usr/local/apache-cassandra-4.0.11/ /usr/local/cassandra
+tar -xzf /vagrant/resources/software/apache-cassandra-5.0.9-bin.tar.gz -C /usr/local
+ln -s /usr/local/apache-cassandra-5.0.9/ /usr/local/cassandra
 
 echo "CASSANDRA: Generating Startup scripts"
 echo export CASSANDRA_HOME=/usr/local/cassandra >> /etc/profile.d/cassandra.sh

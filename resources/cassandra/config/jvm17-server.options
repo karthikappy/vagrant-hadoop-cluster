@@ -15,47 +15,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-#
+
 ###########################################################################
-#                         jvm11-server.options                            #
+#                         jvm17-server.options                            #
 #                                                                         #
-# See jvm-server.options. This file is specific for Java 11 and newer.    #
+# See jvm-server.options. This file is specific for Java 17 and newer.    #
 ###########################################################################
-
-
-########################
-# GENERAL JVM SETTINGS #
-########################
-
-# Disable biased locking as it does not benefit Cassandra.
--XX:-UseBiasedLocking
-
 
 #################
 #  GC SETTINGS  #
 #################
 
-
-
-### CMS Settings
-##-XX:+UseConcMarkSweepGC
-##-XX:+CMSParallelRemarkEnabled
-##-XX:SurvivorRatio=8
-##-XX:MaxTenuringThreshold=1
-##-XX:CMSInitiatingOccupancyFraction=75
-##-XX:+UseCMSInitiatingOccupancyOnly
-##-XX:CMSWaitDuration=10000
-##-XX:+CMSParallelInitialMarkEnabled
-##-XX:+CMSEdenChunksRecordAlways
-## some JVMs will fill up their heap when accessed via JMX, see CASSANDRA-6541
-##-XX:+CMSClassUnloadingEnabled
-
-# Young generation size
-# The main trade-off for the young generation is that the larger it is, the longer GC pause
-# times will be. The smaller it is, the more expensive GC will be (usually).
-#
-# If left unset MAX_HEAP_SIZE and HEAP_NEWSIZE in cassandra-env.sh take precedence.
-#-Xmn800M
 
 
 ### G1 Settings
@@ -97,13 +67,13 @@
 
 -Djdk.attach.allowAttachSelf=true
 --add-exports java.base/jdk.internal.misc=ALL-UNNAMED
---add-exports java.base/jdk.internal.ref=ALL-UNNAMED
---add-exports java.base/jdk.internal.util=ALL-UNNAMED
---add-exports java.base/sun.nio.ch=ALL-UNNAMED
 --add-exports java.management.rmi/com.sun.jmx.remote.internal.rmi=ALL-UNNAMED
+--add-exports java.management/com.sun.jmx.remote.security=ALL-UNNAMED
 --add-exports java.rmi/sun.rmi.registry=ALL-UNNAMED
 --add-exports java.rmi/sun.rmi.server=ALL-UNNAMED
 --add-exports java.sql/java.sql=ALL-UNNAMED
+--add-exports java.base/java.lang.ref=ALL-UNNAMED
+--add-exports jdk.unsupported/sun.misc=ALL-UNNAMED
 
 --add-opens java.base/java.lang.module=ALL-UNNAMED
 --add-opens java.base/jdk.internal.loader=ALL-UNNAMED
@@ -113,7 +83,12 @@
 --add-opens java.base/jdk.internal.module=ALL-UNNAMED
 --add-opens java.base/jdk.internal.util.jar=ALL-UNNAMED
 --add-opens jdk.management/com.sun.management.internal=ALL-UNNAMED
-
+--add-opens java.base/sun.nio.ch=ALL-UNNAMED
+--add-opens java.base/java.io=ALL-UNNAMED
+--add-opens java.base/java.lang.reflect=ALL-UNNAMED
+--add-opens java.base/java.lang=ALL-UNNAMED
+--add-opens java.base/java.util=ALL-UNNAMED
+--add-opens java.base/java.nio=ALL-UNNAMED
 
 ### GC logging options -- uncomment to enable
 

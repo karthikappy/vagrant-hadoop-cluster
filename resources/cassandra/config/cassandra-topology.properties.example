@@ -1,4 +1,3 @@
-#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -14,15 +13,29 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-#
-###########################################################################
-#                         jvm-clients.options                             #
-#                                                                         #
-# See jvm11-clients.options and jvm17-clients.options for Java version     #
-# specific options.                                                       #
-###########################################################################
 
-# intentionally left empty
+# Cassandra Node IP=Data Center:Rack
+192.168.1.100=DC1:RAC1
+192.168.2.200=DC2:RAC2
 
-# The newline in the end of file is intentional
+10.0.0.10=DC1:RAC1
+10.0.0.11=DC1:RAC1
+10.0.0.12=DC1:RAC2
+
+10.20.114.10=DC2:RAC1
+10.20.114.11=DC2:RAC1
+
+10.21.119.13=DC3:RAC1
+10.21.119.10=DC3:RAC1
+
+10.0.0.13=DC1:RAC2
+10.21.119.14=DC3:RAC2
+10.20.114.15=DC2:RAC2
+
+# default for unknown nodes
+default=DC1:r1
+
+# Native IPv6 is supported, however you must escape the colon in the IPv6 Address
+# Also be sure to comment out JVM_OPTS="$JVM_OPTS -Djava.net.preferIPv4Stack=true"
+# in cassandra-env.sh
+fe80\:0\:0\:0\:202\:b3ff\:fe1e\:8329=DC1:RAC3
