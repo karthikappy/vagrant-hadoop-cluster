@@ -18,3 +18,4 @@ localpy/*.py
 ipynb/*
 pip_cache/*/
 resources/storm/conf-old/
+resources/hive/config-old/
