@@ -17,3 +17,4 @@ localpy/*.py
 *.log
 ipynb/*
 pip_cache/*/
+resources/storm/conf-old/
