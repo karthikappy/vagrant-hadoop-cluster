@@ -11,6 +11,12 @@ cp /vagrant/resources/hadoop/systemd/hadoop.service /etc/systemd/system/hadoop.s
 systemctl enable hadoop.service
 systemctl start hadoop.service
 
+echo "NAMENODE SERVICES - HBASE"
+cp /vagrant/resources/hbase/systemd/hbase.service /etc/systemd/system/hbase.service
+systemctl daemon-reload
+systemctl enable hbase.service
+systemctl start hbase.service
+
 echo "NAMENODE SERVICES - SPARK"
 cp /vagrant/resources/spark/systemd/spark.service /etc/systemd/system/spark.service
 systemctl enable spark.service

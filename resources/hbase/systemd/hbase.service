@@ -1,0 +1,14 @@
+[Unit]
+Description=Apache HBase
+Requires=hadoop.service zookeeper.service
+After=hadoop.service zookeeper.service
+
+[Service]
+Type=oneshot
+User=vagrant
+ExecStart=/usr/local/hbase/bin/start-hbase.sh
+ExecStop=/usr/local/hbase/bin/stop-hbase.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
