@@ -2,8 +2,8 @@
 
 echo "HADOOP: Starting"
 echo "HADOOP: Copying Files"
-tar -xzf /vagrant/resources/software/hadoop-3.3.6-aarch64.tar.gz -C /usr/local       # Extract hadoop archive into node
-ln -s /usr/local/hadoop-3.3.6 /usr/local/hadoop                       # Create symbolic link to simplify scripting
+tar -xzf /vagrant/resources/software/hadoop-3.5.0.tar.gz -C /usr/local       # Extract hadoop archive into node
+ln -s /usr/local/hadoop-3.5.0 /usr/local/hadoop                       # Create symbolic link to simplify scripting
 	
 # Create startup script
 echo "HADOOP: Generating Startup scripts"
