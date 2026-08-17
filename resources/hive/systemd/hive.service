@@ -1,11 +1,20 @@
 [Unit]
-Description=Hadoop Daemon
-After=hadoop.service
+Description=Apache HiveServer2
+Requires=hadoop.service mysql.service
+After=network-online.target hadoop.service mysql.service
 
 [Service]
 Type=simple
 User=vagrant
+Environment=JAVA_HOME=/usr/local/java
+Environment=HADOOP_HOME=/usr/local/hadoop
+Environment=HADOOP_CONF_DIR=/usr/local/hadoop/etc/hadoop
+Environment=HIVE_HOME=/usr/local/hive
+Environment=HIVE_CONF_DIR=/usr/local/hive/conf
 ExecStart=/usr/local/hive/bin/hiveserver2
+Restart=on-failure
+RestartSec=10
+SuccessExitStatus=143
 
 [Install]
-WantedBy=default.target
+WantedBy=multi-user.target
