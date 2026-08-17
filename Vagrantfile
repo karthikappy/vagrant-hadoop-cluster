@@ -29,27 +29,27 @@ Vagrant.configure("2") do |config|
             node.vm.provision :shell, :path => "scripts/setup-java.sh"
             node.vm.provision :shell, :path => "scripts/setup-hadoop.sh"
             node.vm.provision :shell, :path => "scripts/setup-hadoop-workers.sh", :args => "-s 2 -t #{numNodes}"
-            #node.vm.provision :shell, :path => "scripts/setup-zookeeper-id.sh", :args => "-s #{i}"
-            #node.vm.provision :shell, :path => "scripts/setup-hbase.sh"
+            node.vm.provision :shell, :path => "scripts/setup-zookeeper-id.sh", :args => "-s #{i}"
+            node.vm.provision :shell, :path => "scripts/setup-hbase.sh"
 
             if i != 1
-                #node.vm.provision :shell, :path => "scripts/setup-datanode-services.sh"
-                #node.vm.provision :shell, :path => "scripts/setup-cassandra.sh"
+                node.vm.provision :shell, :path => "scripts/setup-datanode-services.sh"
+                node.vm.provision :shell, :path => "scripts/setup-cassandra.sh"
                 #node.vm.provision :shell, :path => "scripts/start-cassandra.sh", privileged: false
             end
 
             if i == 2 # Node 2 is our cassandra master
-                #node.vm.provision :shell, :path => "scripts/start-cassandra.sh", privileged: false
+                node.vm.provision :shell, :path => "scripts/start-cassandra.sh", privileged: false
             end
             
             if i == 1
                 node.vm.provision :shell, :path => "scripts/setup-zookeeper.sh"
                 node.vm.provision :shell, :path => "scripts/setup-storm.sh"
                 node.vm.provision :shell, :path => "scripts/setup-spark.sh"
-                #node.vm.provision :shell, :path => "scripts/setup-hive.sh"
-                #node.vm.provision :shell, :path => "scripts/setup-mysql.sh"
-                #node.vm.provision :shell, :path => "scripts/setup-flume.sh"
-                #node.vm.provision :shell, :path => "scripts/setup-nifi.sh"
+                node.vm.provision :shell, :path => "scripts/setup-hive.sh"
+                node.vm.provision :shell, :path => "scripts/setup-mysql.sh"
+                node.vm.provision :shell, :path => "scripts/setup-flume.sh"
+                node.vm.provision :shell, :path => "scripts/setup-nifi.sh"
                 #node.vm.provision :shell, :path => "scripts/setup-conda.sh", privileged: false
                 node.vm.provision :shell, :path => "scripts/setup-namenode.sh", privileged: false
                 node.vm.provision :shell, :path => "scripts/setup-namenode-services.sh"
