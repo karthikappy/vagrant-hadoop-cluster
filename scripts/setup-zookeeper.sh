@@ -2,8 +2,8 @@
 
 echo "ZOOKEEPER: Starting"
 echo "ZOOKEEPER: Copying Files"
-tar -xzf /vagrant/resources/software/apache-zookeeper-3.8.3-bin.tar.gz -C /usr/local       # Extract hadoop archive into node
-ln -s /usr/local/apache-zookeeper-3.8.3-bin /usr/local/zookeeper                       # Create symbolic link to simplify scripting
+tar -xzf /vagrant/resources/software/apache-zookeeper-3.9.5-bin.tar.gz -C /usr/local       # Extract hadoop archive into node
+ln -s /usr/local/apache-zookeeper-3.9.5-bin /usr/local/zookeeper                       # Create symbolic link to simplify scripting
 
 echo "ZOOKEEPER: Generating Startup scripts"
 echo export ZK_HOME=/usr/local/zookeeper >> /etc/profile.d/zookeeper.sh

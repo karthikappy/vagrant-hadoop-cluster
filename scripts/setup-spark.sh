@@ -2,8 +2,8 @@
 
 echo "SPARK: Starting"
 echo "SPARK: Copying Files"
-tar -xzf /vagrant/resources/software/spark-3.4.1-bin-hadoop3.tgz -C /usr/local
-ln -s /usr/local/spark-3.4.1-bin-hadoop3/ /usr/local/spark
+tar -xzf /vagrant/resources/software/spark-4.2.0-bin-hadoop3.tgz -C /usr/local
+ln -s /usr/local/spark-4.2.0-bin-hadoop3/ /usr/local/spark
 
 echo "SPARK: Generating Startup scripts"
 echo export SPARK_HOME=/usr/local/spark >> /etc/profile.d/spark.sh
