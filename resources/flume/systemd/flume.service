@@ -1,0 +1,18 @@
+[Unit]
+Description=Apache Flume agent
+Requires=hadoop.service hive.service
+After=network-online.target hadoop.service hive.service
+
+[Service]
+Type=simple
+User=vagrant
+Environment=JAVA_HOME=/usr/local/java
+Environment=HADOOP_HOME=/usr/local/hadoop
+Environment=FLUME_HOME=/usr/local/flume
+ExecStart=/usr/local/flume/bin/flume-ng agent --conf /usr/local/flume/conf --conf-file /usr/local/flume/conf/lidar.conf --name agent -Dflume.root.logger=INFO,console
+Restart=on-failure
+RestartSec=10
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target

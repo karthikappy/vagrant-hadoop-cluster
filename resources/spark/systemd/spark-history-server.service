@@ -1,13 +1,18 @@
 [Unit]
-Description=Spark History Daemon
+Description=Apache Spark History Server
+Requires=spark.service
 After=spark.service
 
 [Service]
-Type=simple
+Type=oneshot
 User=vagrant
+Environment=JAVA_HOME=/usr/local/java
+Environment=HADOOP_HOME=/usr/local/hadoop
+Environment=HADOOP_CONF_DIR=/usr/local/hadoop/etc/hadoop
+Environment=SPARK_HOME=/usr/local/spark
 ExecStart=/usr/local/spark/sbin/start-history-server.sh
-RemainAfterExit=yes
 ExecStop=/usr/local/spark/sbin/stop-history-server.sh
+RemainAfterExit=yes
 
 [Install]
-WantedBy=default.target
+WantedBy=multi-user.target

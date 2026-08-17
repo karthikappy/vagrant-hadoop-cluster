@@ -1,12 +1,17 @@
 [Unit]
-Description=Apache Storm supervisor
-After=hadoop.service
+Description=Apache Storm Supervisor
+Requires=zookeeper.service
+After=network-online.target zookeeper.service
 
 [Service]
 Type=simple
 User=vagrant
+Environment=JAVA_HOME=/usr/local/java
+Environment=STORM_HOME=/usr/local/storm
 ExecStart=/usr/local/storm/bin/storm supervisor
-RemainAfterExit=yes
+Restart=on-failure
+RestartSec=5
+SuccessExitStatus=143
 
 [Install]
-WantedBy=default.target
+WantedBy=multi-user.target

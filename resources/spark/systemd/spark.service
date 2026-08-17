@@ -1,14 +1,20 @@
 [Unit]
-Description=Spark Daemon
-Before=spark-history-server.service
+Description=Apache Spark standalone cluster
+Requires=hadoop.service
 After=hadoop.service
 
 [Service]
-Type=simple
+Type=oneshot
 User=vagrant
+Environment=JAVA_HOME=/usr/local/java
+Environment=HADOOP_HOME=/usr/local/hadoop
+Environment=HADOOP_CONF_DIR=/usr/local/hadoop/etc/hadoop
+Environment=SPARK_HOME=/usr/local/spark
 ExecStart=/usr/local/spark/sbin/start-all.sh
-RemainAfterExit=yes
 ExecStop=/usr/local/spark/sbin/stop-all.sh
+RemainAfterExit=yes
+TimeoutStartSec=120
+TimeoutStopSec=120
 
 [Install]
-WantedBy=default.target
+WantedBy=multi-user.target

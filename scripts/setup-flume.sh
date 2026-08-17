@@ -11,3 +11,5 @@ echo export PATH=\${FLUME_HOME}/bin:\${PATH} >> /etc/profile.d/flume.sh
 
 echo "FLUME: Copying Configuration Files"
 cp -f /vagrant/resources/flume/config/* /usr/local/flume/conf
+
+chown -R vagrant /usr/local/apache-flume-1.11.0-bin

@@ -1,17 +1,19 @@
 [Unit]
-Description=Apache ZooKeeper
+Description=Apache NiFi
 Wants=network-online.target
 After=network-online.target
 
 [Service]
 Type=simple
 User=vagrant
+WorkingDirectory=/usr/local/nifi
 Environment=JAVA_HOME=/usr/local/java
-Environment=ZOO_LOG_DIR=/usr/local/zookeeper/logs
-ExecStart=/usr/local/zookeeper/bin/zkServer.sh start-foreground
+Environment=NIFI_HOME=/usr/local/nifi
+ExecStart=/usr/local/nifi/bin/nifi.sh run
 Restart=on-failure
-RestartSec=5
+RestartSec=10
 SuccessExitStatus=143
+LimitNOFILE=50000
 
 [Install]
 WantedBy=multi-user.target

@@ -13,3 +13,5 @@ echo export PATH=\${NIFI_HOME}/bin:\${PATH} >> /etc/profile.d/nifi.sh
 echo "NIFI: Copying Configuration Files"
 cp -f /vagrant/resources/nifi/config/* /usr/local/nifi/conf
 
+chown -R vagrant /usr/local/nifi-1.23.2
+
