@@ -64,107 +64,181 @@ vagrant up
 
 ## Application-specific notes
 
+Unless stated otherwise, configuration paths and commands below are run inside a VM. Most applications run as `vagrant` and are managed by systemd. Use `systemctl status <unit>` to check a service and `journalctl -u <unit>` to view its journal.
+
 ### Hadoop
 
-#### Configuration Files
-All configuration files are stores in ```$HADOOP_HOME/etc/hadoop```
+Hadoop is installed on every node with `HADOOP_HOME=/usr/local/hadoop`. `node1` runs the NameNode, SecondaryNameNode, ResourceManager, JobHistory Server, DataNode, and NodeManager. Nodes `node2` and higher run a DataNode and NodeManager.
 
-#### Default Web UI addresses
+#### Configuration files
 
-- http://node1:9870 - Name Node
-- http://node1:8088 - Resource Manager (YARN)
-- http://node2:8042, http://node3:8042, http://node4:8042, http://node5:8042 - Node Manager
+Configuration files are stored in `$HADOOP_HOME/etc/hadoop` (`/usr/local/hadoop/etc/hadoop`). HDFS data is stored in `/var/hadoop/hadoop-namenode` on the NameNode and `/var/hadoop/hadoop-datanode` on each DataNode.
 
-Sources:
-https://kontext.tech/article/265/default-ports-used-by-hadoop-services-hdfs-mapreduce-yarn
+#### Web interfaces and ports
 
-#### Log File Locations
-Hadoop log files are stored in $HADOOP_HOME/logs
+- http://node1:9870/ — HDFS NameNode
+- http://node1:9868/ — HDFS SecondaryNameNode
+- http://node1:8088/ — YARN ResourceManager
+- http://node1:8089/ — YARN web proxy
+- http://node1:19888/ — MapReduce JobHistory Server
+- `http://nodeN:8042/` — YARN NodeManager on every provisioned node, including `node1`
+- `http://nodeN:9864/` — HDFS DataNode on every provisioned node, including `node1`
 
-- hadoop-root-resourcemanager-node1.log  
-- hadoop-root-resourcemanager-node1.out  
-- hadoop-vagrant-namenode-node1.log     
-- hadoop-vagrant-namenode-node1.out     
-- hadoop-vagrant-proxyserver-node1.log  
-- hadoop-vagrant-proxyserver-node1.out
-- hadoop-vagrant-secondarynamenode-node1.log
-- hadoop-vagrant-secondarynamenode-node1.out
-- SecurityAuth-vagrant.audit           
+The HDFS RPC endpoint is `node1:8020`, and the MapReduce JobHistory RPC endpoint is `node1:10020`.
 
-### Zookeeper
+#### Logs and services
 
-#### Configuration Files
-All configuration files are stores in ```/usr/local/zookeeper/conf```
+Application logs are stored in `$HADOOP_HOME/logs`; aggregated YARN application logs are stored in HDFS under `/tmp/logs`. The systemd units are `hadoop-namenode`, `hadoop-secondarynamenode`, `hadoop-datanode`, `hadoop-resourcemanager`, `hadoop-nodemanager`, and `hadoop-jobhistory` (as applicable to the node).
 
-#### Default Web UI Addresses
+### ZooKeeper
 
-- http://node1:8180/commands
+ZooKeeper is installed on `node1` with `ZK_HOME=/usr/local/zookeeper`. It is used by HBase and Storm. Although Hadoop contains HA-related settings, this project provisions only one NameNode and one ZooKeeper server, so it is not an HA deployment.
 
-#### Log file locations
+#### Configuration and data
 
-Logs can be viewed with ```journalctl```
+Configuration files are stored in `$ZK_HOME/conf`; ZooKeeper data is stored in `/var/zookeeper/data`.
+
+#### Interfaces and ports
+
+- http://node1:8180/commands — AdminServer command API
+- `node1:2181` — client connections
+
+#### Logs and service
+
+Logs are stored in `$ZK_HOME/logs` and are also available with `journalctl -u zookeeper`. The systemd unit is `zookeeper`.
 
 ### Storm
 
-#### Configuration Files
-All configuration files are stores in ```/usr/local/storm/conf```
+Storm is installed on `node1` with `STORM_HOME=/usr/local/storm`. Nimbus, Supervisor, the UI, and Logviewer all run on that node and use ZooKeeper at `node1:2181`.
 
-#### Default Web UI Addresses
+#### Configuration files
 
-- http://node1:8090/ - Storm UI
-- http://node1:8000/api/v1/daemonlog?file=nimbus.log - Log Viewer
+Configuration files are stored in `$STORM_HOME/conf`.
 
-#### Log file locations
+#### Interfaces and ports
 
-Logs can be viewed with ```journalctl```
+- http://node1:8090/ — Storm UI
+- http://node1:8000/ — Storm Logviewer
+- http://node1:8000/api/v1/daemonlog?file=nimbus.log — Nimbus log through the Logviewer API
+- `node1:6627` — Nimbus Thrift endpoint
 
-Additional log files are stored in ```$STORM_HOME/logs```
+#### Logs and services
 
-- access-logviewer.log
-- access-nimbus.log
-- access-supervisor.log
-- access-ui.log
-- access-web-logviewer.log
-- access-web-nimbus.log
-- access-web-supervisor.log
-- access-web-ui.log
-- logviewer.log
-- logviewer.log.metrics
-- nimbus.log
-- nimbus.log.metrics
-- supervisor.log
-- supervisor.log.metrics
-- ui.log
-- ui.log.metrics
+Storm logs are stored in `/var/log/storm`. They are also available through the journals for `storm-nimbus`, `storm-supervisor`, `storm-ui`, and `storm-logviewer`.
 
 ### Hive
 
-#### Configuration Files
-All configuration files are stores in ```$HIVE_HOME/conf```
+Hive is installed on `node1` with `HIVE_HOME=/usr/local/hive`. HiveServer2 uses a MySQL-backed metastore and stores its warehouse in HDFS at `/user/hive/warehouse`.
 
-#### Default Web UI Addresses
+#### Configuration files
 
-- http://node1:10002/
+Configuration files are stored in `$HIVE_HOME/conf`.
+
+#### Interfaces and ports
+
+- http://node1:10002/ — HiveServer2 Web UI
+- `jdbc:hive2://node1:10000/default` — HiveServer2 JDBC/Thrift endpoint (connect with `beeline`)
+- `thrift://node1:9083` — Hive Metastore endpoint
+
+#### Logs and services
+
+Hive's Log4j configuration writes the main log to `/tmp/vagrant/hive.log`. Service output is also available with `journalctl -u hive` and `journalctl -u hive-metastore`.
 
 ### Spark
 
-#### Configuration Files
-All configuration files are stores in ```$SPARK_HOME/conf```
+Spark is installed on `node1` with `SPARK_HOME=/usr/local/spark`. The standalone Master, one Worker, and the History Server run on `node1`; submitted applications default to YARN because `spark.master` is set to `yarn`.
 
-#### Default Web UI Addresses
+#### Configuration files
 
-- http://node1:8080/ - Spark Master
-- http://node1:8081/ - Spark Worker
-- http://node1:4040/ - Spark Jobs (only available when a job is in progress)
+Configuration files are stored in `$SPARK_HOME/conf`.
 
-#### Log file locations
+#### Web interfaces and ports
 
-Spark log files are stored in ```$SPARK_HOME/logs```
+- http://node1:8080/ — Spark standalone Master
+- http://node1:8081/ — Spark standalone Worker
+- http://node1:18080/ — Spark History Server
+- http://node1:4040/ — an application's driver UI while that application is running (subsequent concurrent applications use 4041, 4042, and so on)
+- `spark://node1:7077` — standalone Master endpoint
 
-- spark-vagrant-org.apache.spark.deploy.history.HistoryServer-1-node1.out
-- spark-vagrant-org.apache.spark.deploy.master.Master-1-node1.out
-- spark-vagrant-org.apache.spark.deploy.worker.Worker-1-node1.out
-- spark-vagrant-org.apache.spark.sql.hive.thriftserver.HiveThriftServer2-1-node1.out
+#### Logs and services
+
+Daemon logs are stored in `$SPARK_HOME/logs`; Worker state is stored in `/var/lib/spark/work`. Journals are available for `spark-master`, `spark-worker`, and `spark-history-server`.
+
+Event logging is disabled in the supplied `spark-defaults.conf`, so the History Server will not show completed applications until `spark.eventLog.enabled` and a shared `spark.eventLog.dir` are configured.
+
+### HBase
+
+HBase is installed on every node with `HBASE_HOME=/usr/local/hbase`, but the current systemd setup starts both the HBase Master and one RegionServer on `node1`. HBase runs in distributed mode, stores data in HDFS at `hdfs://node1:8020/hbase`, and uses ZooKeeper at `node1`.
+
+#### Configuration files
+
+Configuration files are stored in `$HBASE_HOME/conf`.
+
+#### Web interfaces and ports
+
+- http://node1:16010/ — HBase Master UI
+- http://node1:16030/ — HBase RegionServer UI
+
+#### Logs and services
+
+Logs are stored in `$HBASE_HOME/logs` and are available with `journalctl -u hbase-master` and `journalctl -u hbase-regionserver`.
+
+### Cassandra
+
+Cassandra is installed only on nodes `node2` and higher with `CASSANDRA_HOME=/usr/local/cassandra`. Each node runs an independent Cassandra service with the default cluster name `Test Cluster`.
+
+#### Configuration and data
+
+Configuration files are stored in `$CASSANDRA_HOME/conf`; data is stored beneath `$CASSANDRA_HOME/data`.
+
+#### Interfaces and ports
+
+- `localhost:9042` — CQL native transport
+- `localhost:7000` — internode storage transport
+
+The supplied configuration sets both `listen_address` and `rpc_address` to `localhost`. Consequently, the Cassandra instances do not currently form a multi-node cluster and CQL is not reachable from the host or other VMs without changing those settings.
+
+#### Logs and service
+
+Logs are stored in `$CASSANDRA_HOME/logs` (including `system.log` and `debug.log`) and are available with `journalctl -u cassandra`.
+
+### NiFi
+
+NiFi is installed on `node1` with `NIFI_HOME=/usr/local/nifi`.
+
+#### Configuration files
+
+Configuration files are stored in `$NIFI_HOME/conf`. NiFi creates its repositories and working data beneath `$NIFI_HOME` using the paths in `nifi.properties`.
+
+#### Web interface
+
+- https://node1:8443/nifi/ — NiFi UI and API
+
+NiFi uses HTTPS with an automatically generated certificate. A browser may warn that the certificate is not trusted or does not match the host name.
+
+#### Logs and service
+
+Logs are stored in `$NIFI_HOME/logs` (including `nifi-app.log`, `nifi-bootstrap.log`, `nifi-user.log`, and `nifi-request.log`) and are available with `journalctl -u nifi`.
+
+### Flume
+
+Flume is installed on `node1` with `FLUME_HOME=/usr/local/flume`. The enabled `agent` uses `lidar.conf`: it accepts Avro events on port `9898` and writes JSON records to the Hive table `default.lidar` through the metastore at `node1:9083`.
+
+#### Configuration files
+
+Configuration files are stored in `$FLUME_HOME/conf`.
+
+#### Logs and service
+
+The Flume unit logs to standard output, so use `journalctl -u flume`.
+
+### MySQL
+
+MySQL runs on `node1` and provides Hive's metastore database, `hivemetastore`, over its standard local endpoint on port `3306`. Manage it with the distribution's `mysql` systemd service and inspect logs with `journalctl -u mysql`. Hive's connection settings are in `$HIVE_HOME/conf/hive-site.xml`.
+
+### Optional components
+
+Conda/Jupyter and Apache Sedona setup scripts exist in the repository, but they are not enabled by the current `Vagrantfile`. They have no running service or Web UI after a normal `vagrant up`.
 
 ## Verifying that everything is running
 ### JPS
