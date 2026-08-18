@@ -15,10 +15,14 @@
 <configuration>
 
 <!-- Site specific YARN configuration properties -->
-  <!-- <property>
+  <property>
     <name>yarn.log-aggregation-enable</name>
     <value>true</value>
-  </property> -->
+  </property>
+  <property>
+    <name>yarn.nodemanager.remote-app-log-dir</name>
+    <value>/tmp/logs</value>
+  </property>
   <property>
     <name>yarn.resourcemanager.hostname</name>
     <value>node1</value>

@@ -1,0 +1,21 @@
+[Unit]
+Description=Apache Hadoop MapReduce JobHistory Server
+Requires=hadoop-namenode.service hadoop-resourcemanager.service
+After=network-online.target hadoop-namenode.service hadoop-resourcemanager.service
+
+[Service]
+Type=simple
+User=vagrant
+Environment=JAVA_HOME=/usr/local/java
+Environment=HADOOP_HOME=/usr/local/hadoop
+Environment=HADOOP_CONF_DIR=/usr/local/hadoop/etc/hadoop
+Environment=HADOOP_MAPRED_HOME=/usr/local/hadoop
+ExecStart=/usr/local/hadoop/bin/mapred historyserver
+ExecStartPost=/bin/bash -c 'for i in {1..90}; do if (: > /dev/tcp/node1/10020) 2>/dev/null && (: > /dev/tcp/node1/19888) 2>/dev/null; then exit 0; fi; sleep 1; done; exit 1'
+Restart=on-failure
+RestartSec=10
+SuccessExitStatus=143
+TimeoutStartSec=120
+
+[Install]
+WantedBy=multi-user.target

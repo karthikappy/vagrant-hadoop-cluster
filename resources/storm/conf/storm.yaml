@@ -99,14 +99,20 @@
 #        class: "org.apache.storm.metrics2.filters.RegexFilter"
 #        expression: ".*my_component.*emitted.*"
 
+storm.zookeeper.servers:
+  - "node1"
+storm.zookeeper.port: 2181
+nimbus.seeds:
+  - "node1"
+nimbus.thrift.port: 6627
+ui.host: "0.0.0.0"
 ui.port: 8090
-nimbus.seeds: ["node1"]
-storm.zookeeper.servers: ["node1"]
+logviewer.port: 8000
+storm.local.dir: "/var/lib/storm"
+storm.log.dir: "/var/log/storm"
 supervisor.slots.ports:
   - 6700
   - 6701
   - 6702
   - 6703
-logviewer.port: 8000
-storm.local.dir: "/usr/local/storm/logs"
 topology.eventlogger.executors: 2

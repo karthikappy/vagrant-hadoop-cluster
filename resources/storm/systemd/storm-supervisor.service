@@ -1,13 +1,15 @@
 [Unit]
 Description=Apache Storm Supervisor
-Requires=zookeeper.service
-After=network-online.target zookeeper.service
+Requires=storm-nimbus.service
+After=network-online.target storm-nimbus.service
 
 [Service]
 Type=simple
 User=vagrant
 Environment=JAVA_HOME=/usr/local/java
 Environment=STORM_HOME=/usr/local/storm
+Environment=STORM_CONF_DIR=/usr/local/storm/conf
+Environment=PATH=/usr/local/java/bin:/usr/local/storm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
 ExecStart=/usr/local/storm/bin/storm supervisor
 Restart=on-failure
 RestartSec=5
