@@ -53,7 +53,12 @@
   </property>
   <property>
    <name>hbase.rootdir</name>
-   <value>hdfs://node1:8021/hbase</value>
+   <value>hdfs://node1:8020/hbase</value>
+  </property>
+  <property>
+    <!-- Avoid AsyncFSWAL's dependency on Hadoop private APIs across versions. -->
+    <name>hbase.wal.provider</name>
+    <value>filesystem</value>
   </property>
   <property>
     <name>hbase.zookeeper.quorum</name>
