@@ -9,11 +9,16 @@ User=vagrant
 WorkingDirectory=/usr/local/nifi
 Environment=JAVA_HOME=/usr/local/java
 Environment=NIFI_HOME=/usr/local/nifi
+Environment=PATH=/usr/local/java/bin:/usr/local/nifi/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+ExecStartPre=/usr/bin/test -x /usr/local/nifi/bin/nifi.sh
 ExecStart=/usr/local/nifi/bin/nifi.sh run
+ExecStartPost=/bin/bash -c 'for i in {1..300}; do if /usr/bin/curl --insecure --silent --fail --output /dev/null --max-time 5 https://node1:8443/nifi/; then exit 0; fi; sleep 2; done; exit 1'
 Restart=on-failure
 RestartSec=10
 SuccessExitStatus=143
 LimitNOFILE=50000
+TimeoutStartSec=660
+TimeoutStopSec=60
 
 [Install]
 WantedBy=multi-user.target
