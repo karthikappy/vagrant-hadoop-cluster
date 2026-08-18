@@ -1,7 +1,7 @@
 [Unit]
 Description=Apache Hive Metastore
-Requires=hadoop.service mysql.service
-After=network-online.target hadoop.service mysql.service
+Requires=hadoop-namenode.service hadoop-resourcemanager.service mysql.service
+After=network-online.target hadoop-namenode.service hadoop-resourcemanager.service mysql.service
 
 [Service]
 Type=simple

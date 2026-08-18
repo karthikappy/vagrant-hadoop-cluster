@@ -1,7 +1,7 @@
 [Unit]
 Description=Apache Flume agent
-Requires=hadoop.service hive-metastore.service
-After=network-online.target hadoop.service hive-metastore.service
+Requires=hadoop-namenode.service hive-metastore.service
+After=network-online.target hadoop-namenode.service hive-metastore.service
 
 [Service]
 Type=simple

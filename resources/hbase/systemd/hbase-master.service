@@ -1,0 +1,19 @@
+[Unit]
+Description=Apache HBase Master
+Requires=hadoop-namenode.service zookeeper.service
+After=hadoop-namenode.service zookeeper.service
+
+[Service]
+Type=simple
+User=vagrant
+Environment=JAVA_HOME=/usr/local/java
+Environment=HADOOP_HOME=/usr/local/hadoop
+Environment=HADOOP_CONF_DIR=/usr/local/hadoop/etc/hadoop
+Environment=HBASE_HOME=/usr/local/hbase
+ExecStart=/usr/local/hbase/bin/hbase master start
+Restart=on-failure
+RestartSec=10
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target

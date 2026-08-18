@@ -1,0 +1,18 @@
+[Unit]
+Description=Apache Hadoop YARN NodeManager
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=vagrant
+Environment=JAVA_HOME=/usr/local/java
+Environment=HADOOP_HOME=/usr/local/hadoop
+Environment=HADOOP_CONF_DIR=/usr/local/hadoop/etc/hadoop
+ExecStart=/usr/local/hadoop/bin/yarn nodemanager
+Restart=on-failure
+RestartSec=10
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target

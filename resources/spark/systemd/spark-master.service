@@ -1,7 +1,7 @@
 [Unit]
-Description=Apache Spark History Server
-Requires=spark-master.service
-After=spark-master.service
+Description=Apache Spark Master
+Requires=hadoop-namenode.service hadoop-resourcemanager.service
+After=hadoop-namenode.service hadoop-resourcemanager.service
 
 [Service]
 Type=simple
@@ -11,7 +11,7 @@ Environment=HADOOP_HOME=/usr/local/hadoop
 Environment=HADOOP_CONF_DIR=/usr/local/hadoop/etc/hadoop
 Environment=SPARK_HOME=/usr/local/spark
 Environment=SPARK_CONF_DIR=/usr/local/spark/conf
-ExecStart=/usr/local/spark/bin/spark-class org.apache.spark.deploy.history.HistoryServer
+ExecStart=/usr/local/spark/bin/spark-class org.apache.spark.deploy.master.Master --host node1
 Restart=on-failure
 RestartSec=10
 SuccessExitStatus=143

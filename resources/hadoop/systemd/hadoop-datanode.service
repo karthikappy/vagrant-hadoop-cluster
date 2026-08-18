@@ -1,0 +1,19 @@
+[Unit]
+Description=Apache Hadoop DataNode
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=vagrant
+Environment=JAVA_HOME=/usr/local/java
+Environment=HADOOP_HOME=/usr/local/hadoop
+Environment=HADOOP_CONF_DIR=/usr/local/hadoop/etc/hadoop
+ExecStart=/usr/local/hadoop/bin/hdfs datanode
+Restart=on-failure
+RestartSec=10
+SuccessExitStatus=143
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
