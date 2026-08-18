@@ -258,6 +258,3 @@ On data nodes, you should see the following:
 - org.apache.zookeeper.server.quorum.QuorumPeerMain - Zookeeper
 
 ## Known Issues
-
-- Hadoop has not been properly set up to use zookeeper
-- Apache Hive is not compatible with Java 11 - https://github.com/exasol/hadoop-etl-udfs/issues/59
