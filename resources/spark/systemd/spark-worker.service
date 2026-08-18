@@ -11,10 +11,18 @@ Environment=HADOOP_HOME=/usr/local/hadoop
 Environment=HADOOP_CONF_DIR=/usr/local/hadoop/etc/hadoop
 Environment=SPARK_HOME=/usr/local/spark
 Environment=SPARK_CONF_DIR=/usr/local/spark/conf
-ExecStart=/usr/local/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://node1:7077
+Environment=SPARK_WORKER_DIR=/var/lib/spark/work
+Environment=SPARK_WORKER_WEBUI_PORT=8081
+ExecStartPre=/usr/bin/test -x /usr/local/spark/bin/spark-class
+ExecStartPre=/usr/bin/test -d /var/lib/spark/work
+ExecStartPre=/bin/bash -c 'for i in {1..60}; do if /usr/bin/timeout 1 bash -c "</dev/tcp/node1/7077" 2>/dev/null; then exit 0; fi; sleep 1; done; exit 1'
+ExecStart=/usr/local/spark/bin/spark-class org.apache.spark.deploy.worker.Worker --host node1 --webui-port 8081 --work-dir /var/lib/spark/work spark://node1:7077
+ExecStartPost=/bin/bash -c 'for i in {1..120}; do if /usr/bin/curl --silent --fail --output /dev/null --max-time 2 http://node1:8081/; then exit 0; fi; sleep 1; done; exit 1'
 Restart=on-failure
 RestartSec=10
 SuccessExitStatus=143
+TimeoutStartSec=190
+TimeoutStopSec=60
 
 [Install]
 WantedBy=multi-user.target

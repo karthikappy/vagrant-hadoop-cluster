@@ -1,3 +1,7 @@
+/.gitattributes text eol=lf
 resources/nifi/config/** text eol=lf
 resources/nifi/systemd/*.service text eol=lf
 scripts/setup-nifi.sh text eol=lf
+resources/spark/config/** text eol=lf
+resources/spark/systemd/*.service text eol=lf
+scripts/setup-spark.sh text eol=lf
