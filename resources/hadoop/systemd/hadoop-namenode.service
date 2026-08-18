@@ -10,10 +10,12 @@ Environment=JAVA_HOME=/usr/local/java
 Environment=HADOOP_HOME=/usr/local/hadoop
 Environment=HADOOP_CONF_DIR=/usr/local/hadoop/etc/hadoop
 ExecStart=/usr/local/hadoop/bin/hdfs namenode
+ExecStartPost=/bin/bash -c 'for i in {1..90}; do if (: > /dev/tcp/node1/8020) 2>/dev/null; then exit 0; fi; sleep 1; done; exit 1'
 Restart=on-failure
 RestartSec=10
 SuccessExitStatus=143
 LimitNOFILE=65536
+TimeoutStartSec=120
 
 [Install]
 WantedBy=multi-user.target

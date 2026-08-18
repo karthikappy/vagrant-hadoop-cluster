@@ -46,6 +46,27 @@
     <value>node1</value>
   </property>
   <property>
+    <name>hive.server2.thrift.port</name>
+    <value>10000</value>
+  </property>
+  <property>
+    <name>hive.server2.webui.host</name>
+    <value>node1</value>
+  </property>
+  <property>
+    <name>hive.server2.webui.port</name>
+    <value>10002</value>
+  </property>
+  <property>
+    <name>hive.server2.webui.use.ssl</name>
+    <value>false</value>
+  </property>
+  <property>
+    <!-- The Metastore notification API is not used by this development cluster. -->
+    <name>hive.notification.event.poll.interval</name>
+    <value>0s</value>
+  </property>
+  <property>
     <name>hive.server2.logging.operation.log.location</name>
     <value>/var/hive/iotemp</value>
   </property>

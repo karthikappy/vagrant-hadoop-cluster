@@ -43,6 +43,23 @@ systemctl start hadoop-namenode.service
 systemctl start hadoop-secondarynamenode.service hadoop-datanode.service
 systemctl start hadoop-resourcemanager.service hadoop-nodemanager.service
 
+echo "NAMENODE SERVICES - PREPARING HIVE WAREHOUSE"
+warehouse_ready=false
+for _ in {1..90}; do
+  if runuser -u vagrant -- /usr/local/hadoop/bin/hdfs dfs -mkdir -p /user/hive/warehouse >/dev/null 2>&1; then
+    warehouse_ready=true
+    break
+  fi
+  sleep 1
+done
+if [[ "$warehouse_ready" != true ]]; then
+  echo "Hive warehouse creation timed out waiting for writable HDFS" >&2
+  runuser -u vagrant -- /usr/local/hadoop/bin/hdfs dfs -mkdir -p /user/hive/warehouse
+  exit 1
+fi
+runuser -u vagrant -- /usr/local/hadoop/bin/hdfs dfs -chown vagrant:supergroup /user/hive /user/hive/warehouse
+runuser -u vagrant -- /usr/local/hadoop/bin/hdfs dfs -chmod 1777 /user/hive/warehouse
+
 echo "NAMENODE SERVICES - STARTING DATA SERVICES"
 systemctl start hbase-master.service hbase-regionserver.service
 systemctl start hive-metastore.service
