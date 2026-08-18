@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 <!--
-  Site-specific overrides for the Vagrant Hive 4.2.0 installation.
+  Site-specific overrides for the Vagrant Hive 4.1.0 installation.
   Hive defaults remain owned by HiveConf and hive-default.xml.template.
 -->
 <configuration>
@@ -28,6 +28,10 @@
   <property>
     <name>javax.jdo.option.ConnectionUserName</name>
     <value>hiveuser</value>
+  </property>
+  <property>
+    <name>hive.metastore.uris</name>
+    <value>thrift://node1:9083</value>
   </property>
   <property>
     <name>hive.querylog.location</name>

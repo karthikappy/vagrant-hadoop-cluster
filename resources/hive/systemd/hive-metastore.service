@@ -1,7 +1,7 @@
 [Unit]
-Description=Apache HiveServer2
-Requires=hadoop.service hive-metastore.service
-After=network-online.target hadoop.service hive-metastore.service
+Description=Apache Hive Metastore
+Requires=hadoop.service mysql.service
+After=network-online.target hadoop.service mysql.service
 
 [Service]
 Type=simple
@@ -11,10 +11,12 @@ Environment=HADOOP_HOME=/usr/local/hadoop
 Environment=HADOOP_CONF_DIR=/usr/local/hadoop/etc/hadoop
 Environment=HIVE_HOME=/usr/local/hive
 Environment=HIVE_CONF_DIR=/usr/local/hive/conf
-ExecStart=/usr/local/hive/bin/hiveserver2
+ExecStart=/usr/local/hive/bin/hive --service metastore
+ExecStartPost=/bin/bash -c 'for i in {1..60}; do if (: > /dev/tcp/127.0.0.1/9083) 2>/dev/null; then exit 0; fi; sleep 1; done; exit 1'
 Restart=on-failure
 RestartSec=10
 SuccessExitStatus=143
+TimeoutStartSec=90
 
 [Install]
 WantedBy=multi-user.target
